@@ -1,0 +1,13 @@
+# 首先排除所有文件
+*
+
+# 然后只包含必要的文件
+!api/search.rs
+!static/test.html
+!vercel.json
+!package.json
+!Cargo.toml
+!src/lib.rs
+
+# 构建相关
+!scripts/build.sh 

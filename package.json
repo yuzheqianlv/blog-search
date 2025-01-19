@@ -1,0 +1,14 @@
+{
+  "name": "blog-search-service",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "bash scripts/build.sh"
+  },
+  "dependencies": {
+    "@vercel/node": "^2.15.1"
+  },
+  "devDependencies": {
+    "vercel": "^32.3.0"
+  }
+} 
