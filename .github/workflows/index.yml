@@ -1,0 +1,27 @@
+name: Update Search Index
+
+on:
+  repository_dispatch:
+    types: [blog-content-updated]
+
+jobs:
+  update-index:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Setup Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          
+      - name: Clone Blog Content
+        run: |
+          git clone https://github.com/your-username/blog.git content
+          
+      - name: Build Index
+        run: cargo run --bin indexer
+        
+      - name: Deploy
+        run: |
+          # 部署更新后的索引 
