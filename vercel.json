@@ -8,19 +8,12 @@
     ],
     "routes": [
         {
-            "src": "/",
-            "dest": "/static/test.html"
-        },
-        {
-            "src": "/static/(.*)",
-            "dest": "/static/$1"
-        },
-        {
-            "handle": "filesystem"
+            "src": "/api/search",
+            "dest": "/api/search.rs"
         },
         {
             "src": "/(.*)",
-            "dest": "/static/test.html"
+            "dest": "/static/index.html"
         }
     ],
     "env": {

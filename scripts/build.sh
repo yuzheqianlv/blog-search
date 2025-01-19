@@ -10,8 +10,7 @@ rm -rf data
 mkdir -p static
 
 # 复制静态文件
-cp -f test.html static/index.html
-cp -f test.html static/test.html
+cp -f index.html static/index.html
 
 # 安装依赖
 npm install

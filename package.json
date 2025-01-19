@@ -4,12 +4,14 @@
   "private": true,
   "scripts": {
     "build": "bash scripts/build.sh",
-    "vercel-build": "bash scripts/build.sh"
+    "vercel-build": "bash scripts/build.sh",
+    "deploy": "gh-pages -d static"
   },
   "dependencies": {
     "@vercel/node": "^2.15.1"
   },
   "devDependencies": {
-    "vercel": "^32.3.0"
+    "vercel": "^32.3.0",
+    "gh-pages": "^6.0.0"
   }
 } 

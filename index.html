@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>博客搜索服务</title>
+    <style>
+        /* ... 原有样式保持不变 ... */
+    </style>
+</head>
+<body>
+    <div class="search-container">
+        <div class="search-header">
+            <div class="search-box">
+                <input type="text" id="search-input" 
+                       placeholder="搜索文章..."
+                       onkeypress="if(event.key === 'Enter') searchPosts()">
+                <button onclick="searchPosts()">搜索</button>
+            </div>
+        </div>
+    </div>
+    <div id="search-results"></div>
+
+    <script>
+        // 修改 API 路径以适应 GitHub Pages
+        const API_BASE = window.location.hostname === 'localhost' 
+            ? 'http://localhost:3000'
+            : 'https://blog-search-lw4f.vercel.app';
+
+        async function searchPosts() {
+            const query = document.getElementById('search-input').value;
+            if (!query) return;
+
+            try {
+                const response = await fetch(`${API_BASE}/api/search?q=${encodeURIComponent(query)}`);
+                if (!response.ok) {
+                    throw new Error(`搜索请求失败: ${response.status}`);
+                }
+                
+                const results = await response.json();
+                displaySearchResults(results);
+            } catch (error) {
+                console.error('搜索失败:', error);
+                showError(error.message);
+            }
+        }
+
+        // ... 其他函数保持不变 ...
+    </script>
+</body>
+</html> 
