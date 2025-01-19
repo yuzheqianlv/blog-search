@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "bash scripts/build.sh"
+    "build": "bash scripts/build.sh",
+    "vercel-build": "bash scripts/build.sh"
   },
   "dependencies": {
     "@vercel/node": "^2.15.1"

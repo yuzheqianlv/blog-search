@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>搜索文章</title>
+    <style>
+        :root {
+            --primary-color: #4a5568;
+            --secondary-color: #718096;
+            --bg-color: #ffffff;
+            --text-color: #2d3748;
+            --border-color: #e2e8f0;
+            --hover-color: #f7fafc;
+            --mark-color: #fefcbf;
+            --shadow-color: rgba(0, 0, 0, 0.06);
+            --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, 
+                        "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+            --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, 
+                        Consolas, "Liberation Mono", "Courier New", monospace;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--bg-color);
+            font-family: var(--font-sans);
+            color: var(--text-color);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .search-container {
+            position: static;
+            width: 600px;
+            max-width: 90vw;
+            margin-bottom: 3rem;
+        }
+
+        .search-header {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .search-box {
+            flex: 1;
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            background: transparent;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            outline: none;
+            transition: all 0.2s;
+            background: white;
+            font-family: var(--font-sans);
+        }
+
+        .search-box input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(74, 85, 104, 0.1);
+        }
+
+        .search-box button {
+            padding: 0.75rem 1.5rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 400;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: var(--font-sans);
+        }
+
+        .search-box button:hover {
+            background: var(--secondary-color);
+            transform: translateY(-1px);
+        }
+
+        .search-box button:active {
+            transform: translateY(0);
+        }
+
+        #search-results {
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .result-item {
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            transition: all 0.2s;
+        }
+
+        .result-item:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 2px 8px var(--shadow-color);
+        }
+
+        .result-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+            color: var(--secondary-color);
+            font-size: 0.875rem;
+            font-family: var(--font-sans);
+        }
+
+        .result-path {
+            font-family: var(--font-mono);
+            padding: 0.25rem 0.5rem;
+            background: var(--hover-color);
+            border-radius: 4px;
+        }
+
+        .result-header {
+            margin-bottom: 1rem;
+        }
+
+        .result-title {
+            font-size: 1.5rem;
+            margin: 0.5rem 0;
+            font-family: var(--font-sans);
+            font-weight: 500;
+        }
+
+        .result-title a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .result-title a:hover {
+            color: var(--secondary-color);
+        }
+
+        .result-score {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            background: var(--hover-color);
+            border-radius: 999px;
+            font-size: 0.875rem;
+            color: var(--secondary-color);
+            font-family: var(--font-sans);
+        }
+
+        .result-excerpt {
+            position: relative;
+            padding: 1.5rem;
+            background: var(--hover-color);
+            border-radius: 8px;
+            margin: 1rem 0;
+            font-size: 1rem;
+            line-height: 1.8;
+            font-family: var(--font-sans);
+        }
+
+        .result-excerpt mark {
+            background-color: var(--mark-color);
+            padding: 0.1em 0.2em;
+            border-radius: 2px;
+        }
+
+        .result-excerpt::before {
+            content: '"';
+            position: absolute;
+            left: -0.5rem;
+            top: -0.5rem;
+            font-size: 2rem;
+            color: var(--secondary-color);
+            opacity: 0.2;
+        }
+
+        .result-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .result-tag {
+            padding: 0.25rem 0.75rem;
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 999px;
+            font-size: 0.875rem;
+            color: var(--secondary-color);
+            transition: all 0.2s;
+            font-family: var(--font-sans);
+        }
+
+        .result-tag:hover {
+            background: var(--hover-color);
+            border-color: var(--secondary-color);
+        }
+
+        .result-anchor {
+            font-family: var(--font-mono);
+            color: var(--secondary-color);
+            font-size: 0.875rem;
+        }
+
+        .result-location {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--hover-color);
+            border-radius: 8px;
+            font-family: var(--font-sans);
+        }
+
+        .location-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--secondary-color);
+            font-size: 0.875rem;
+        }
+
+        .line-number {
+            font-family: var(--font-mono);
+            color: var(--secondary-color);
+            padding: 0 0.5rem;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 4px;
+        }
+
+        @media (max-width: 640px) {
+            .search-container {
+                margin-bottom: 2rem;
+            }
+
+            .search-header {
+                flex-direction: column-reverse;
+                gap: 1.5rem;
+                align-items: center;
+            }
+
+            .avatar {
+                width: 56px;
+                height: 56px;
+            }
+        }
+
+        /* 自定义滚动条 */
+        #search-results::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        #search-results::-webkit-scrollbar-track {
+            background: var(--hover-color);
+        }
+
+        #search-results::-webkit-scrollbar-thumb {
+            background: var(--secondary-color);
+            border-radius: 3px;
+        }
+
+        .avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 2px 8px var(--shadow-color);
+            flex-shrink: 0;
+            transition: transform 0.3s;
+        }
+
+        .avatar:hover {
+            transform: rotate(360deg);
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* 添加代码块样式 */
+        .code-block {
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .code-line {
+            padding: 0.125rem 0;
+        }
+
+        .match-line {
+            background: rgba(255, 255, 200, 0.3);
+            font-weight: 500;
+        }
+
+        .result-excerpt {
+            padding: 1rem;
+            background: var(--hover-color);
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="search-container">
+        <div class="search-header">
+            <div class="search-box">
+                <input type="text" id="search-input" 
+                       placeholder="搜索文章..."
+                       onkeypress="if(event.key === 'Enter') searchPosts()">
+                <button onclick="searchPosts()">搜索</button>
+            </div>
+            <div class="avatar">
+                <img src="/shaonv.jpeg" alt="头像">
+            </div>
+        </div>
+    </div>
+    <div id="search-results"></div>
+
+    <script>
+        async function searchPosts() {
+            const query = document.getElementById('search-input').value;
+            if (!query) return;
+
+            try {
+                const response = await fetch(`/api/search.rs?q=${encodeURIComponent(query)}`);
+                if (!response.ok) {
+                    throw new Error(`搜索请求失败: ${response.status}`);
+                }
+                
+                const results = await response.json();
+                displaySearchResults(results);
+            } catch (error) {
+                console.error('搜索失败:', error);
+                showError(error.message);
+            }
+        }
+
+        function displaySearchResults(results) {
+            const container = document.getElementById('search-results');
+            const searchQuery = document.getElementById('search-input').value;
+            
+            if (!results || results.length === 0) {
+                showNoResults();
+                return;
+            }
+
+            container.innerHTML = results.map(result => `
+                <article class="result-item">
+                    <div class="result-meta">
+                        <div class="result-path">${result.path}</div>
+                    </div>
+                    <div class="result-header">
+                        <h2 class="result-title">
+                            <a href="${result.path}">${result.title}</a>
+                        </h2>
+                    </div>
+                    <div class="result-excerpt">
+                        ${highlightText(result.excerpt, searchQuery)}
+                    </div>
+                    <div class="result-tags">
+                        ${result.tags.map(tag => `
+                            <span class="result-tag">${tag}</span>
+                        `).join('')}
+                    </div>
+                </article>
+            `).join('');
+        }
+
+        function highlightText(text, query) {
+            if (!query) return text;
+            const regex = new RegExp(`(${escapeRegExp(query)})`, 'gi');
+            return text.replace(regex, '<mark>$1</mark>');
+        }
+
+        function escapeRegExp(string) {
+            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+
+        function showNoResults() {
+            const container = document.getElementById('search-results');
+            container.innerHTML = `
+                <div class="no-results">
+                    <p>未找到相关文章</p>
+                </div>
+            `;
+        }
+
+        function showError(message) {
+            const container = document.getElementById('search-results');
+            container.innerHTML = `
+                <div class="search-error">
+                    <strong>搜索出错:</strong> ${message}
+                </div>
+            `;
+        }
+
+        // 添加回车搜索支持
+        document.getElementById('search-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchPosts();
+            }
+        });
+
+        // 页面加载时检查 URL 参数
+        window.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const query = urlParams.get('q');
+            if (query) {
+                document.getElementById('search-input').value = query;
+                searchPosts();
+            }
+        });
+    </script>
+</body>
+</html> 

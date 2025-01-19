@@ -8,6 +8,17 @@
     ],
     "routes": [
         {
+            "src": "/",
+            "dest": "/static/test.html"
+        },
+        {
+            "src": "/static/(.*)",
+            "dest": "/static/$1"
+        },
+        {
+            "handle": "filesystem"
+        },
+        {
             "src": "/(.*)",
             "dest": "/static/test.html"
         }

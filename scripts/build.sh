@@ -9,10 +9,9 @@ rm -rf data
 # 创建静态目录
 mkdir -p static
 
-# 确保 test.html 存在
-if [ ! -f "static/test.html" ]; then
-    cp test.html static/test.html
-fi
+# 复制静态文件
+cp -f test.html static/index.html
+cp -f test.html static/test.html
 
 # 安装依赖
 npm install
